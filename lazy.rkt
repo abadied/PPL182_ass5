@@ -62,7 +62,11 @@
 ; Part 3: The assignment ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define take1 (lambda (x y) 'TODO))
+(define take1 (lambda (lz-lst pred)
+    (if (or (empty-lzl? lz-lst) (not (pred (head lz-lst))))
+      empty-lzl
+      (cons (head lz-lst)
+            (take1 (tail lz-lst) pred)))))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ; Part 4: The tests ;
