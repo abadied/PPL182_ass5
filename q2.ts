@@ -35,14 +35,12 @@ export const leftMostEven1 = (atree: Tree): number => {
   else{
     if(atree.children.length === 0)
       return -1;
-    for(let i = 0; i < atree.children.length - 1; i++){
-      let ans_car = leftMostEven1(atree.children[i]);
-      if(ans_car != -1)
-        return ans_car;
-      else 
-        return leftMostEven1(atree.children[i + 1])
+    let ans_car = leftMostEven1(atree.children[0]);
+    if(ans_car != -1)
+      return ans_car;
+    else 
+      return leftMostEven1({children: atree.children.slice(1)})
     }
-  }
 }
 
 
@@ -56,9 +54,28 @@ export const leftMostEven2 = (atree: Tree): number =>
 const leftMostEven$ = <T1, T2>(atree: Tree,
                                succ: ((x:number) => T1),
                                fail: (() => T2)): (T1 | T2) =>
-    isTreeLeaf(atree) ? (atree.value % 2 === 0) ? succ(atree.value) : fail() :
-    isTreeNode(atree) ? leftMostEven$({children: atree.children.slice(0, 1)}, succ, fail) :
-    fail();
+    {
+      if(isTreeLeaf(atree)){
+        if(atree.value % 2 === 0)
+          return succ(atree.value);
+        else
+          return fail();
+      }
+      else{
+        if(atree.children.length === 0)
+          return fail();
+        return leftMostEven$(atree.children[0], 
+                      succ,
+                      () => leftMostEven$({children: atree.children.slice(1)}, succ, fail));
+      }
+    };
 
 
+// TESTS 
+console.log(leftMostEven1(t1));
+console.log(leftMostEven1(t2));
+console.log(leftMostEven1(t3));
 
+console.log(leftMostEven2(t1));
+console.log(leftMostEven2(t2));
+console.log(leftMostEven2(t3));
