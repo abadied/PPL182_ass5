@@ -30,7 +30,7 @@
 (define check-inf-loop
   (lambda (mission)
     (with-handlers ([exn:fail:resource?
-                     (־» (e)
+                     (lambda (e)
                        (if (equal? (exn->string e)
                                    "with-limit: out of time\n")
                            'infinite

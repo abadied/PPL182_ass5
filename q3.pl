@@ -36,8 +36,8 @@
 %
 
 
-page_in_category(PName, CatId) :- page(X, Y, PName, Z), 
-	categorylinks(X, A), category(CatId, A, true).
+page_in_category(PName, CatId) :- page(X, _, PName, Z),
+	categorylinks(X, Y), category(CatId, Y, false).
 
 % Signature: splitter_category(CategoryId)/1
 % Purpose: A category that has at least two pages.
@@ -69,6 +69,6 @@ splitter_category(CatId) :- page_in_category(X, CatId),
 
 cont_not_member(false).
 
-namespace_list(Name, PageList) :- namespace(num, Name), page(X, num, title, len),
+namespace_list(Name, PageList) :- namespaces(num, Name), page(X, num, title, len),
 	cont_not_member(not_member(X, PageList)).
 
