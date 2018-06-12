@@ -67,8 +67,15 @@ splitter_category(CatId) :- page_in_category(X, CatId),
 % X = [558585, 689695, 858585].
 %
 
-cont_not_member(false).
+searching_for_more(Q1, Q2, Q3) :- Q1, Q2, Q3.
 
-namespace_list(Name, PageList) :- namespaces(num, Name), page(X, num, title, len),
-	cont_not_member(not_member(X, PageList)).
+done_searching(Q1, Q2, Q3) :- \+searching_for_more(Q1, Q2, Q3).
+
+namespace_list(Name, L) :- inner_namespace_list(Name, L, []).
+
+inner_namespace_list(Name, [], L3) :- done_searching(namespaces(Y, Name), page(X, Y, _, E), not_member(X, L3)).
+inner_namespace_list(Name, [X | L2], L1) :- in_namespace_list(Name, X), not_member(X, L1), inner_namespace_list(Name, L2, [X | L1]).
+
+in_namespace_list(Name, X) :- namespaces(Y, Name), page(X, Y, _, E).
+	
 
