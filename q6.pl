@@ -12,3 +12,10 @@
 % X = [3];
 % X = [];
 % false
+
+sub([], []).
+sub([X | L1],[X | L2]) :- sub(L1, L2).
+sub(Sublist, [_ | List]) :-  sub(Sublist, List). 
+
+
+    

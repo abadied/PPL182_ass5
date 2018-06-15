@@ -5,6 +5,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Part 1: The lazy lists interface ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Signature: take(lz-lst,n)
+;; Type: [LzL*Number -> List]
+;; If n > length(lz-lst) then the result is lz-lst as a List
+(define take
+  (lambda (lz-lst n)
+    (if (or (= n 0) (empty-lzl? lz-lst))
+      empty-lzl
+      (cons (head lz-lst)
+            (take (tail lz-lst) (- n 1))))))
 
 (define cons-lzl cons)
 
@@ -52,10 +61,27 @@
 ; Tests:
 ; (take (all-subs '(1 2 3)) 8) ->
 ; '(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))
+(define all-subs-helper
+  (lambda (long sub)
+    (if (empty? long)
+        empty-lzl
+        (cons-lzl (append sub (list (car long))) (lambda () (lzl-append (all-subs-helper (cdr long) sub) (all-subs-helper (cdr long) (append sub (list (car long)))))))
+        )
+    )
+  )
+
+(define lzl-append
+  (lambda (lz1 lz2)
+    (if (empty-lzl? lz1)
+        lz2
+        (cons-lzl (head lz1)
+                  (lambda () (lzl-append (tail lz1) lz2))))))
+
 (define all-subs
-  (lambda (long)
-    ;; Your code here 
+  (lambda (long) (cons-lzl '() (lambda ()
+    (all-subs-helper long '())))
 ))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;
@@ -64,7 +90,7 @@
 
 ;; Make sure to add take or another utility to test here
 ;; If the results are obained in a different order, change the test accordingly.
-(check-inf-loop (lambda () (take (all-subs '(1 2 3)) 8))
+(check-inf-loop (lambda () (take (all-subs '(1 2 3)) 8)))
 ;; Write more tests - at least 5 tests.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
